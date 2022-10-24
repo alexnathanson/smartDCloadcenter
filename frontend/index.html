@@ -1,0 +1,43 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<title>D.E.E.S.</title>
+
+<link rel="stylesheet" href="index.css">
+
+</head>
+<body>
+
+<h1>D.E.E.S.</h1>
+<p>Distributed Emergent Energy Systems</p>
+
+<h2>System Specs</h2>
+
+<h3>Array</h3>
+<div id="moduleCount">Modules: </div>
+<div id="arrayVoltage">Array voltage: </div>
+<div id="arrayCurrent">Array current: </div>
+<div id="arrayPower">Array power: </div>
+
+<h3>Loads</h3>
+<div id="loadV">Total load voltage: </div>
+<div id="loadC">Total load current: </div>
+<div id="loadBranchCount">Load branches: 3</div>
+
+<div class="branchInfo">
+    <div class="singleBranch">Branch 1: <span id="branch1">off</span></div>
+     <button type="button" id="branch1-critical">not critical</button> 
+</div>
+
+<div class="branchInfo">
+    <div class="singleBranch">Branch 2: <span id="branch2">off</span></div>
+     <button type="button" id="branch2-critical">not critical</button> 
+</div>
+
+<div class="branchInfo">
+    <div class="singleBranch">Branch 3: <div id="branch3">off</div></div>
+     <button type="button" id="branch3-critical">not critical</button> 
+</div>
+
+</body>
+</html> 
