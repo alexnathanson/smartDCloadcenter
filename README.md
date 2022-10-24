@@ -30,3 +30,8 @@ A smart DC load center for managing intermittency in off-grid renewable energy s
 ### User provided data
 
 * system specs
+
+
+### Dev
+
+`.\venv\Scripts\activate`

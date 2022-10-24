@@ -13,6 +13,9 @@
 Adafruit_INA219 ina219_PV; // defaults to 0x40
 Adafruit_INA219 ina219_LOAD(0x41);
 
+//set to false when running from Python
+bool devMode = false;
+
 bool ina_pv_status = false;
 bool ina_load_status = false;
 
@@ -46,7 +49,7 @@ void setup() {
   // By default the initialization will use the largest range (32V, 2A).  However
   // you can call a setCalibration function to change this range (see comments).
   if (! ina219_PV.begin()) {
-    Serial.println("Failed to find INA219 PV chip");
+    Serial.println("Error: Failed to find INA219 PV chip");
     //while (1) { delay(10); }
      ina_pv_status = false;
   } else {
@@ -55,7 +58,7 @@ void setup() {
   }
 
    if (! ina219_LOAD.begin()) {
-    Serial.println("Failed to find INA219 LOAD chip");
+    Serial.println("Error: Failed to find INA219 LOAD chip");
     //while (1) { delay(10); }
      ina_load_status = false;
   } else {
@@ -113,31 +116,41 @@ void loop() {
   power_mW_LOAD = ina219_LOAD.getPower_mW();
   loadvoltage_LOAD = busvoltage_LOAD + (shuntvoltage_LOAD / 1000);
 
+  //print to Python (production mode)
+  /*Serial.println(
+    
+    {"system":{"modules": },
+                    "pv":{"current":0,"voltage":0,"power":0},
+                    "load":{"current":0,"voltage":0,"power":0}
+                    })
+*/
+                    
   //print system data
-  Serial.println("*** SYSTEM DATA ***");
+  printDevMode("*** SYSTEM DATA ***");
   if(rState==0){
-      Serial.println("Modules: " + String(rState + 1));
+      Serial.println("modules: " + String(rState + 1));
   } else {
-      Serial.println("Modules: " + String(rState + 1));
+      Serial.println("modules: " + String(rState + 1));
   }
-  Serial.println("");
+  printDevMode("");
 
   //print INA readings
-  Serial.println("*** PV DATA ***");
+  printDevMode("*** PV DATA ***");
   //Serial.print("Bus Voltage:   "); Serial.print(busvoltage_PV); Serial.println(" V");
   //Serial.print("Shunt Voltage: "); Serial.print(shuntvoltage_PV); Serial.println(" mV");
-  Serial.print("Load Voltage:  "); Serial.print(loadvoltage_PV); Serial.println(" V");
-  Serial.print("Current:       "); Serial.print(current_mA_PV); Serial.println(" mA");
-  Serial.print("Power:         "); Serial.print(power_mW_PV); Serial.println(" mW");
-  Serial.println("");
+  Serial.print("pv voltage:  "); Serial.print(loadvoltage_PV); Serial.println(" V");
+  Serial.print("pv current:       "); Serial.print(current_mA_PV); Serial.println(" mA");
+  Serial.print("pv power:         "); Serial.print(power_mW_PV); Serial.println(" mW");
+  printDevMode("");
 
-    Serial.println("*** LOAD DATA ***");
-    //Serial.print("Bus Voltage:   "); Serial.print(busvoltage_LOAD); Serial.println(" V");
-    //Serial.print("Shunt Voltage: "); Serial.print(shuntvoltage_LOAD); Serial.println(" mV");
-    Serial.print("Load Voltage:  "); Serial.print(loadvoltage_LOAD); Serial.println(" V");
-    Serial.print("Current:       "); Serial.print(current_mA_LOAD); Serial.println(" mA");
-    Serial.print("Power:         "); Serial.print(power_mW_LOAD); Serial.println(" mW");
-    Serial.println("");
+  printDevMode("*** LOAD DATA ***");
+  //Serial.print("Bus Voltage:   "); Serial.print(busvoltage_LOAD); Serial.println(" V");
+  //Serial.print("Shunt Voltage: "); Serial.print(shuntvoltage_LOAD); Serial.println(" mV");
+  //printDevMode("load voltage:  " + String(loadvoltage_LOAD) + " V");
+  Serial.print("load voltage:  "); Serial.print(loadvoltage_LOAD); Serial.println(" V");
+  Serial.print("load current:       "); Serial.print(current_mA_LOAD); Serial.println(" mA");
+  Serial.print("load power:         "); Serial.print(power_mW_LOAD); Serial.println(" mW");
+  printDevMode("");
 
   if(power_mW_PV <= 0.0){
     digitalWrite(load1, LOW);   // turn the LED on (HIGH is the voltage level)
@@ -156,6 +169,13 @@ void loop() {
       digitalWrite(load3, HIGH);   // turn the LED on (HIGH is the voltage level)
     }
   }
-  delay(3000);                       // wait for 3 seconds
+  delay(5000);                       // wait for 5 seconds
   
+}
+
+
+void printDevMode(String toPrint){
+  if(devMode == true){
+      Serial.println(toPrint);
+  }
 }
