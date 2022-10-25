@@ -24,6 +24,10 @@ const int load1 = 2;
 const int load2 = 3;
 const int load3 = 4;
 
+int branchStatus1 = 0;
+int branchStatus2 = 0;
+int branchStatus3 = 0;
+
 //these pins control PV input relays (NOT BEING USED CURRENTLY
 //const int pv = 6;
 
@@ -116,15 +120,23 @@ void loop() {
   power_mW_LOAD = ina219_LOAD.getPower_mW();
   loadvoltage_LOAD = busvoltage_LOAD + (shuntvoltage_LOAD / 1000);
 
-  //print to Python (production mode)
-  /*Serial.println(
+  //determine load branch status
+    branchStatus1 = 0;
+    branchStatus2 = 0;
+    branchStatus3 = 0;
     
-    {"system":{"modules": },
-                    "pv":{"current":0,"voltage":0,"power":0},
-                    "load":{"current":0,"voltage":0,"power":0}
-                    })
-*/
-                    
+    if(power_mW_PV > 0.0){
+      branchStatus1 = 1;
+    }
+ 
+    if(power_mW_PV > 10.0){
+      branchStatus2 = 1;
+    }
+  
+    if(power_mW_PV > 30.0){
+      branchStatus3 = 1;
+    }
+               
   //print system data
   printDevMode("*** SYSTEM DATA ***");
   if(rState==0){
@@ -152,6 +164,15 @@ void loop() {
   Serial.print("load power:         "); Serial.print(power_mW_LOAD); Serial.println(" mW");
   printDevMode("");
 
+  printDevMode("*** LOAD BRANCH STATUS***");
+  Serial.print("branch1: "); Serial.println(branchStatus1);
+  Serial.print("branch2: "); Serial.println(branchStatus2);
+  Serial.print("branch3: "); Serial.println(branchStatus3);
+  
+  //this tells Python that all the new data is sent
+  Serial.println("******");
+  printDevMode("");
+  
   if(power_mW_PV <= 0.0){
     digitalWrite(load1, LOW);   // turn the LED on (HIGH is the voltage level)
     digitalWrite(load2, LOW);   // turn the LED on (HIGH is the voltage level)

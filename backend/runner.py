@@ -1,13 +1,9 @@
 #import threading
 #import logging
 import api
-import json
 
 #this is the code for communicating with an Arduino via serial
 from arduinoSerial import ArduinoSerial as Arduino 
-
-def flaskServer():
- 	api.app.run()
 
 def arduinoSerialCommunication():
 	try:
@@ -22,12 +18,9 @@ def arduinoSerialCommunication():
 
 def runAll():
 
-    # flaskThread = thread.Thread(target=flaskServer, daemon=True)
-    # arduinoThread = thread.Thread(target=arduinoSerialCommunication, daemon=True)
-
-    # flaskThread.start()
     arduinoSerialCommunication()
     api.app.run()
+
 
 
 if __name__ == '__main__':
