@@ -24,9 +24,17 @@ const int load1 = 2;
 const int load2 = 3;
 const int load3 = 4;
 
+//currently on or off
+int branchState1 = 0;
+int branchState2 = 0;
+int branchState3 = 0;
+
+//critical or shedable
 int branchStatus1 = 0;
 int branchStatus2 = 0;
 int branchStatus3 = 0;
+
+int incomingByte;
 
 //these pins control PV input relays (NOT BEING USED CURRENTLY
 //const int pv = 6;
@@ -89,8 +97,10 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
 
+   serialEvent();
+
+  //this is the reed switch
   rState = digitalRead(rs);
-  //Serial.println(String(rState));
   
   //initialize INA variables
   float shuntvoltage_PV = 0;
@@ -120,21 +130,23 @@ void loop() {
   power_mW_LOAD = ina219_LOAD.getPower_mW();
   loadvoltage_LOAD = busvoltage_LOAD + (shuntvoltage_LOAD / 1000);
 
-  //determine load branch status
-    branchStatus1 = 0;
-    branchStatus2 = 0;
-    branchStatus3 = 0;
-    
-    if(power_mW_PV > 0.0){
-      branchStatus1 = 1;
+    //set branch state based on PV power
+    if(power_mW_PV > 0.0 || branchStatus1 == 1){
+      branchState1 = 1;
+    } else {
+      branchState1 = 0;
     }
  
-    if(power_mW_PV > 10.0){
-      branchStatus2 = 1;
+    if(power_mW_PV > 10.0 || branchStatus2 == 1){
+      branchState2 = 1;
+    } else {
+      branchState2 = 0;
     }
   
-    if(power_mW_PV > 30.0){
-      branchStatus3 = 1;
+    if(power_mW_PV > 30.0 || branchStatus3 == 1){
+      branchState3 = 1;
+    } else {
+      branchState3 = 0;
     }
                
   //print system data
@@ -164,36 +176,55 @@ void loop() {
   Serial.print("load power:         "); Serial.print(power_mW_LOAD); Serial.println(" mW");
   printDevMode("");
 
-  printDevMode("*** LOAD BRANCH STATUS***");
-  Serial.print("branch1: "); Serial.println(branchStatus1);
-  Serial.print("branch2: "); Serial.println(branchStatus2);
-  Serial.print("branch3: "); Serial.println(branchStatus3);
+  printDevMode("*** LOAD BRANCH STATE ***");
+  Serial.print("branch1: "); Serial.println(branchState1);
+  Serial.print("branch2: "); Serial.println(branchState2);
+  Serial.print("branch3: "); Serial.println(branchState3);
   
   //this tells Python that all the new data is sent
   Serial.println("******");
   printDevMode("");
-  
-  if(power_mW_PV <= 0.0){
-    digitalWrite(load1, LOW);   // turn the LED on (HIGH is the voltage level)
-    digitalWrite(load2, LOW);   // turn the LED on (HIGH is the voltage level)
-    digitalWrite(load3, LOW);   // turn the LED on (HIGH is the voltage level)
-  } else {
-    if(power_mW_PV > 0.0){
+
+  //branch 1
+  if(branchState1 == 1){
       digitalWrite(load1, HIGH);   // turn the LED on (HIGH is the voltage level)
-    }
-  
-    if(power_mW_PV > 10.0){
+   } else {
+      digitalWrite(load1, LOW);   // turn the LED on (HIGH is the voltage level)
+   }
+
+   if(branchState2 == 1){
       digitalWrite(load2, HIGH);   // turn the LED on (HIGH is the voltage level)
-    }
-  
-    if(power_mW_PV > 30.0){
+   } else {
+      digitalWrite(load2, LOW);   // turn the LED on (HIGH is the voltage level)
+   }
+
+   if(branchState3 == 1){
       digitalWrite(load3, HIGH);   // turn the LED on (HIGH is the voltage level)
-    }
-  }
+   } else {
+      digitalWrite(load3, LOW);   // turn the LED on (HIGH is the voltage level)
+   }
+
+  
   delay(5000);                       // wait for 5 seconds
   
 }
 
+//read serial data
+void serialEvent() {
+  while (Serial.available() > 0) {
+
+    // read the oldest byte in the serial buffer:
+    incomingByte = Serial.read();
+    // if it's a capital A flip branch 1 status:
+    if (incomingByte == 'A') {
+      branchStatus1 = 1 -  branchStatus1;      
+    } else if (incomingByte == 'S') {
+      branchStatus2 = 1 -  branchStatus2;
+    } else if (incomingByte == 'D') {
+      branchStatus3 = 1 -  branchStatus3;
+    }
+  }
+}
 
 void printDevMode(String toPrint){
   if(devMode == true){

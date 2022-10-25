@@ -19,15 +19,15 @@ function setBranchStatus(bNum) {
     let bData
     b = document.getElementById("branch" + bNum + "-status")
     console.log(b.textContent)
-    if(b.textContent == "not critical"){
+    if(b.textContent == "shedable"){
         b.textContent = "critical"
         bData = {branch: bNum, status :1}
     } else {
-        b.textContent = "not critical"
+        b.textContent = "shedable"
         bData = {branch: bNum, status:0}
     }
 
-    httpPost("http://localhost:5000/status",bData)
+    httpPost("http://localhost:5000/input",bData)
 }
 
 function updateScreen(){

@@ -11,9 +11,9 @@ systemData = {"system":{"modules":0,"loadBranches":0,"branchState":{1:0,2:0,3:0}
                     }
 
 userInput = {"load":
-            {"branch1":{"critical":False},
-            "branch2":{"critical":False},
-            "branch3":{"critical":False}}}
+            {"branch1":{"status":0},
+            "branch2":{"status":0},
+            "branch3":{"status":0}}}
 
 print("Starting Flask server...")
 
@@ -40,17 +40,17 @@ def api():
         return response
 
 #this route is for all user inputs
-@app.route('/input', methods=['POST', 'GET'])
-def status():
+@app.route('/input', methods=['POST'])
+def input():
     if request.method == 'POST':
         postJSON = request.get_json()
 
         # parsePost = postJSON.split(":")
 
         print(postJSON)
-        global systemData
-        systemData['system']['branchStatus'][str(postJSON['branch'])] = postJSON['status']
-        print(systemData)
+        global userInput
+        userInput['load']['branch' + str(postJSON['branch'])]['status'] = postJSON['status']
+        print(userInput)
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
 if __name__ == '__main__':

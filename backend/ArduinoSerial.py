@@ -22,13 +22,18 @@ class ArduinoSerial():
         self.serialObj = serial.Serial(self.port)
         self.readThread = threading.Thread(target=self.readLoop) #make this a daemon!!!
         #branch state is whether it is currently on or off, branch status is whether it is a critical or shedable
-        self.data = {"system":{"modules":0,"loadBranches":3,"branchState":{1:0,2:0,3:0},"branchStatus":{1:0,2:0,3:0}},
+        self.data = {"system":{"modules":0,"loadBranches":3,"branchState":{1:0,2:0,3:0}},
                     "pv":{"current":0,"voltage":0,"power":0},
                     "load":{"current":0,"voltage":0,"power":0},
                     }
 
     def readLoop(self):
         print("starting read loop")
+
+        uI = {"load":
+            {"branch1":{"status":0},
+            "branch2":{"status":0},
+            "branch3":{"status":0}}}
 
         #try:
         while True:
@@ -63,7 +68,27 @@ class ArduinoSerial():
                 #print(self.data)
                 elif "******" in newData:
                     postJSON(self.data)
-                time.sleep(0.05)
+            else:
+                newUI = getUserInput()
+
+                #this is stupid...change this to a real thing in the future...
+
+                if newUI != uI:
+                    
+                    print(uI)
+
+
+                    if uI['load']['branch1']['status']!= newUI['load']['branch1']['status']:
+                        self.sendByte('A')
+                    
+                    if uI['load']['branch2']['status']!= newUI['load']['branch2']['status']:
+                        self.sendByte('S')
+                    elif uI['load']['branch3']['status']!= newUI['load']['branch3']['status']:
+                        self.sendByte('D')
+                    #sendByte(uI['branch'] + ":" + uI['status'])
+                    uI = newUI
+
+            time.sleep(0.05)
             # if keyboard.is_pressed('q'):  # if key 'q' is pressed 
             #     print('You Pressed A Key!')
             #     break  # finishing the loop
@@ -74,7 +99,7 @@ class ArduinoSerial():
         #with serial.Serial(self.port, self.baud, timeout=1) as ser:
             #time.sleep(0.5)
         #print("byte: " + str(theByte))
-        self.serialObj.write((bytes(x, 'utf-8')))   # send the pyte string 'H'
+        self.serialObj.write((bytes(theByte, 'utf-8')))   # send the pyte string 'H'
             #time.sleep(0.5)   # wait 0.5 seconds
             #ser.write(b'L')   # send the byte string 'L'
 
@@ -83,6 +108,12 @@ class ArduinoSerial():
         #split on ':' delineator, remove white spaces and line breaks
         cleanedData = rawData.split(":")[1].replace(" ", "").rstrip()
         return cleanedData
+
+def getUserInput():
+    try:
+        return requests.get('http://localhost:5000/api?data=user').json()
+    except:
+        print(requests.exceptions)
 
 def postJSON(dstData):
     try:
