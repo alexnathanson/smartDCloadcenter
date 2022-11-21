@@ -1,4 +1,6 @@
 *.sublime-workspace
 *.sublime-project
 
+keys.py
+
 venv/

@@ -22,7 +22,6 @@ def runAll():
     api.app.run()
 
 
-
 if __name__ == '__main__':
  
     runAll()

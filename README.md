@@ -35,3 +35,9 @@ A smart DC load center for managing intermittency in off-grid renewable energy s
 ### Dev
 
 `.\venv\Scripts\activate`
+
+
+
+### misc
+
+motor driver: https://github.com/CytronTechnologies/CytronMotorDrivers
