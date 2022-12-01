@@ -31,6 +31,11 @@ function setBranchStatus(bNum) {
 }
 
 function updateScreen(){
+    updateSystem()
+    updateSite()
+}
+
+function updateSystem(){
     sData = JSON.parse(httpGet("http://localhost:5000/api?data=system"))
     console.log(sData)
     mC.innerHTML = "Modules: " + sData['system']['modules']
@@ -68,6 +73,12 @@ function updateScreen(){
 
 }
 
+
+function updateSite(){
+    
+}
+
+//System Specs
 mC = document.getElementById("moduleCount")
 aV = document.getElementById("arrayVoltage")
 aC = document.getElementById("arrayCurrent")
@@ -90,6 +101,17 @@ b1Stat = document.getElementById("branch1-status")
 b2Stat = document.getElementById("branch2-status")
 b3Stat = document.getElementById("branch3-status")
 
+//Site Specs
+sLoc = document.getElementById("location")
+todW = document.getElementById("todayWeather")
+tomW = document.getElementById("tomorrowWeather")
+aTomW = document.getElementById("dayAfterTomorrowWeather")
+todS = document.getElementById("todaySun")
+tomS = document.getElementById("tomorrowSun")
+aTomS = document.getElementById("dayAfterTomorrowSun")
+pTodS = document.getElementById("todaySunP")
+pTomS = document.getElementById("tomorrowSunP")
+pATomS = document.getElementById("dayAfterTomorrowSunP")
 
 updateScreen()
 

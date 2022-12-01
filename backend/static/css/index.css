@@ -6,6 +6,25 @@ body {
 .branchInfo {
 	border-style: solid;
 	border-width: 1px;
-	padding: 10px;
-	margin: 5px;
+	padding: 5px;
+	margin-top: 5px;
+}
+
+.specColumns{
+	float: left;
+	width:49%;
+	//border-width:  1px;
+	//border-style: solid;
+	padding: 5px;
+	padding-bottom: 20px;
+}
+
+#specs{
+	overflow: auto; //this is needed to account for the way float makes the children behave causing container collapse
+	border-width:  1px;
+	border-style: solid;
+}
+
+#settings{
+	overflow: auto; //this is needed to account for the way float makes the children behave causing container collapse
 }

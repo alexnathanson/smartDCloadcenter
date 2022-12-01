@@ -11,35 +11,61 @@
 <h1>D.E.E.N.</h1>
 <p>Distributed Emergent Energy Networks V0.0.1</p>
 
-<h2>System Specs</h2>
-Refresh rate: 5 sec
+<div id="specs">
+    <div class="specColumns">
+        <h2>System Specs</h2>
+        Refresh rate: 5 sec
 
-<h3>Array</h3>
-<div id="moduleCount">Modules: </div>
-<div id="arrayVoltage">Array voltage: </div>
-<div id="arrayCurrent">Array current: </div>
-<div id="arrayPower">Array power: </div>
+        <h3>Array</h3>
+        <div id="moduleCount">Modules: </div>
+        <div id="arrayVoltage">Array voltage: </div>
+        <div id="arrayCurrent">Array current: </div>
+        <div id="arrayPower">Array power: </div>
 
-<h3>Loads</h3>
-<div id="loadVoltage">Total load voltage: </div>
-<div id="loadCurrent">Total load current: </div>
-<div id="loadPower">Total load power: </div>
-<div id="loadBranchCount">Load branches: 3</div>
+        <h3>Loads</h3>
+        <div id="loadVoltage">Total load voltage: </div>
+        <div id="loadCurrent">Total load current: </div>
+        <div id="loadPower">Total load power: </div>
+        <div id="loadBranchCount">Load branches: 3</div>
+    </div>
 
-
-<div class="branchInfo" id="branch1">
-    <span id="branch1-state">Branch 1: off</span>
-    <button type="button" id="branch1-status" onclick="setBranchStatus(1)">shedable</button> 
+    <div class="specColumns">
+        <h2>Site Specs</h2>
+        <div id="sLocation">Location: </div>
+        <h3>Weather Prediction</h3>
+            <div id="todayWeather">Today:</div>
+            <div id="tomorrowWeather">Tomorrow:</div>
+            <div id="dayAfterTomorrowWeather">Day After Tomorrow:</div>
+        <h3>Typical Available Sunlight</h3>
+            <div id="todaySun">Today:</div>
+            <div id="tomorrowSun">Tomorrow:</div>
+            <div id="dayAfterTomorrowSun">Day After Tomorrow:</div>
+        <h3>Available Sunlight Prediction</h3>
+            <div id="todaySunP">Today:</div>
+            <div id="tomorrowSunP">Tomorrow:</div>
+            <div id="dayAfterTomorrowSunP">Day After Tomorrow:</div>
+    </div>
 </div>
 
-<div class="branchInfo" id="branch2">
-    <span id="branch2-state">Branch 2: off</span>
-    <button type="button" id="branch2-status" onclick="setBranchStatus(2)">shedable</button> 
+<div id="settings">
+    <div class="branchInfo" id="branch1">
+        <span id="branch1-state">Branch 1: off</span>
+        <button type="button" id="branch1-status" onclick="setBranchStatus(1)">shedable</button> 
+    </div>
+
+    <div class="branchInfo" id="branch2">
+        <span id="branch2-state">Branch 2: off</span>
+        <button type="button" id="branch2-status" onclick="setBranchStatus(2)">shedable</button> 
+    </div>
+
+    <div class="branchInfo" id="branch3">
+        <span id="branch3-state">Branch 3: off</span>
+        <button type="button" id="branch3-status" onclick="setBranchStatus(3)">shedable</button> 
+    </div>
 </div>
 
-<div class="branchInfo" id="branch3">
-    <span id="branch3-state">Branch 3: off</span>
-    <button type="button" id="branch3-status" onclick="setBranchStatus(3)">shedable</button> 
+<div id="moreSpecs">
+    <div id="internetStatus">Internet Status: </div>
 </div>
 
  <script src="static/js/index.js"></script> 

@@ -41,3 +41,10 @@ A smart DC load center for managing intermittency in off-grid renewable energy s
 ### misc
 
 motor driver: https://github.com/CytronTechnologies/CytronMotorDrivers
+
+#### notes
+
+* develop insight -  aha moment
+* game is a specific implementation of the game manages by the player 
+	* game to see if I can convince assholes like me to share
+	* allow for people to play the game selfishly - but you die
